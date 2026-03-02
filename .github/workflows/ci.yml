@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [takehome, main]
+  pull_request:
+    branches: [takehome, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          cd examples/tutorial
+          pip install -e ".[test]"
+
+      - name: Run tests
+        run: |
+          cd examples/tutorial
+          pytest
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t flask-tutorial .
+
+      - name: Verify container starts
+        run: |
+          docker run -d --name test-web -p 8000:8000 flask-tutorial
+          sleep 5
+          curl -sSf http://localhost:8000/ -o /dev/null && echo "Container OK" || exit 1
+          docker stop test-web

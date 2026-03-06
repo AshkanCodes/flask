@@ -22,10 +22,10 @@ This section demonstrates running the [Flask tutorial application](https://githu
 The application runs under a regular user account, not root. This is confirmed first, before any other steps:
 ```bash
 whoami
-# Expected: your username (e.g., linux)
+# Output: linux
 
 id -u
-# Expected: 1000 (or any non-zero UID)
+# Output: 1000
 ```
 
 ---
@@ -41,7 +41,7 @@ sudo apt install -y git python3 python3-venv python3-pip ca-certificates curl
 Verify Python is available:
 ```bash
 python3 --version
-# Expected: Python 3.12.x
+# Output: Python 3.12.3
 ```
 
 ---
@@ -60,7 +60,7 @@ git checkout -b takehome
 Capture the pinned commit hash for reproducibility:
 ```bash
 git rev-parse HEAD
-# Expected: c34de81fd8e405e6d4178bf24b364918811ef17
+# Output: c34de81fd8e405e6d4178bf24b364918811ef17
 ```
 
 Navigate to the tutorial application directory:
@@ -114,9 +114,9 @@ With the server running, open a **second terminal** and verify the listening por
 sudo ss -ltnp | grep -E ':5000'
 ```
 
-The `sudo` is required so that the `-p` flag can resolve the owning process name and PID. Expected output shape:
+The `sudo` is required so that the `-p` flag can resolve the owning process name and PID.
 ```
-LISTEN  0  128  127.0.0.1:5000  0.0.0.0:*  users:(("python3",pid=XXXX,fd=Y))
+LISTEN  0  128  127.0.0.1:5000  0.0.0.0:*  users:(("python3",pid=1234,fd=5))
 ```
 
 This confirms the application is listening on `127.0.0.1:5000` (loopback only).
@@ -130,7 +130,7 @@ From the same second terminal, verify the app returns a valid HTTP response:
 curl -sSf http://127.0.0.1:5000/ -o /dev/null && echo "OK" || echo "FAIL"
 ```
 
-Expected output: `OK`
+Output: `OK`
 
 ---
 
